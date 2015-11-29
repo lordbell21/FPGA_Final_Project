@@ -1,12 +1,14 @@
 # compile vhdl design source files
 vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/ch07/list_ch07_03_uart_tx.vhd"
 vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/ch07/list_ch07_01_uart_rx.vhd"
-vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/ch04/list_ch04_11_mod_m.vhd"
 vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/ch04/list_ch04_20_fifo.vhd"
-vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/new/db_fsm_book.vhd"
-vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/Downloads/sorting_algo.vhd"
+vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/ch04/list_ch04_11_mod_m.vhd"
 vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/ch07/list_ch07_04_uart.vhd"
+vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/Basys3_Basic_Demo_1/UART_TX_CTRL.vhd"
+vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/Downloads/sorting_algo.vhd"
+vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/imports/new/db_fsm_book.vhd"
 vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/new/Interface.vhd"
+vhdl xil_defaultlib  "../../../project_1.srcs/sources_1/new/binary_to_ascii.vhd"
 vhdl xil_defaultlib  "../../../project_1.srcs/sim_1/imports/FPGA Final Project/sort_test.vhd"
 
 # Do not sort compile order
