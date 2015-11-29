@@ -1,24 +1,3 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 11/21/2015 06:28:36 PM
--- Design Name: 
--- Module Name: Interface - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
@@ -26,7 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity Interface is
     Port ( 
             clk, reset : in STD_LOGIC;
-            start_sort : in STD_LOGIC;
+            start : in STD_LOGIC;
             rx : in STD_LOGIC;
             tx : out STD_LOGIC
          );
@@ -40,7 +19,7 @@ architecture Behavioral of Interface is
     constant FIFO_W: integer := 2;
     constant SB_TICK : integer := 16;
     constant DVSR : integer := 326; --100MHz, 50MHz was 163. 100MHz / (16*Baud Rate) Baud Rate = 19200
-    signal done_sort, request_out : STD_LOGIC;
+    signal done_sort, start_sort, request_out : STD_LOGIC;
     signal out_data : STD_LOGIC_VECTOR(7 downto 0);
     signal rd_uart, wr_uart, tx_full, rx_empty : STD_LOGIC := '0';
     signal tx_done_tick : std_logic;
@@ -53,6 +32,9 @@ architecture Behavioral of Interface is
     signal w_data_next : STD_LOGIC_VECTOR (7 downto 0);  
     signal count, count_next : integer := 0;  
 begin
+    debounce : entity work.db_fsm
+        port map(clk => clk, reset => reset, sw => start, db => start_sort);
+
     sorting_algorithm : entity work.sorting_algo(arch)
         generic map(ADDR_WIDTH => ADDR_WIDTH, DATA_WIDTH => DATA_WIDTH)
         port map(clk => clk, start_sort => start_sort, done_sort => done_sort, request_out => request_out, out_data => out_data, reset => reset);
