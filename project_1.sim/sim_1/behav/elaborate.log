@@ -1,6 +1,6 @@
 Vivado Simulator 2015.2
 Copyright 1986-1999, 2001-2015 Xilinx, Inc. All Rights Reserved.
-Running: G:/Xilinx/Vivado/2015.2/bin/unwrapped/win64.o/xelab.exe -wto ea6486985ac145daa63c6088bc4bd33e --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot sort_test_behav xil_defaultlib.sort_test -log elaborate.log 
+Running: G:/Xilinx/Vivado/2015.2/bin/unwrapped/win64.o/xelab.exe -wto 569c127b04754b59b8b0f530118f8ec9 --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot sort_test_behav xil_defaultlib.sort_test -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Completed static elaboration
@@ -11,6 +11,7 @@ Compiling package std.standard
 Compiling package ieee.std_logic_1164
 Compiling package ieee.numeric_std
 Compiling package std.textio
+Compiling architecture arch of entity xil_defaultlib.db_fsm [db_fsm_default]
 Compiling architecture arch of entity xil_defaultlib.sorting_algo [\sorting_algo(4,8)\]
 Compiling architecture arch of entity xil_defaultlib.mod_m_counter [\mod_m_counter(9,326)\]
 Compiling architecture arch of entity xil_defaultlib.uart_rx [\uart_rx(8,16)\]

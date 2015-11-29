@@ -29,7 +29,7 @@ end sort_test;
 
 architecture Behavioral of sort_test is
     signal clk, reset : STD_LOGIC := '1';
-    signal start_sort : STD_LOGIC;
+    signal start : STD_LOGIC;
     signal tx, rx : STD_LOGIC;
 begin
 
@@ -45,17 +45,17 @@ begin
     --    port map(clk, start_sort, done_sort, request_out, out_data, reset);
         
     interface : entity work.Interface
-        Port map(clk, reset, start_sort, rx, tx );
+        Port map(clk, reset, start, rx, tx );
         
     main : process
     begin
         reset <= '0';
-        start_sort <= '0';
+        start <= '0';
         wait for 4 ns;
-        start_sort <= '1';
-        wait for 5 ns;
-        start_sort <= '0';
-        wait for 400 ns;
+        start <= '1';
+        wait for 30 ms;
+        start <= '0';
+        wait for 500 ms;
     end process;
 
 end Behavioral;
