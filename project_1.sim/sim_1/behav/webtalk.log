@@ -1,0 +1,16 @@
+#-----------------------------------------------------------
+# Webtalk v2015.2 (64-bit)
+# SW Build 1266856 on Fri Jun 26 16:35:25 MDT 2015
+# IP Build 1264090 on Wed Jun 24 14:22:01 MDT 2015
+# Start of session at: Sun Nov 29 03:14:38 2015
+# Process ID: 12472
+# Log file: G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav/webtalk.log
+# Journal file: G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav\webtalk.jou
+#-----------------------------------------------------------
+source G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav/xsim.dir/sort_test_behav/webtalk/xsim_webtalk.tcl -notrace
+webtalk_transmit: Time (s): cpu = 00:00:00 ; elapsed = 00:00:06 . Memory (MB): peak = 61.180 ; gain = 0.016
+
+    while executing
+"webtalk_transmit -clientid 3536675291 -regid "211084392_0_0_946" -xml G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/b..."
+    (file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav/xsim.dir/sort_test_behav/webtalk/xsim_webtalk.tcl" line 32)
+INFO: [Common 17-206] Exiting Webtalk at Sun Nov 29 03:14:44 2015...
