@@ -64,3 +64,7 @@ project_1.sim/sim_1/behav/sort_test_behav.wdb
 *.wdf
 *.vds
 *.log
+*.rpx
+*.vdb
+*.exe
+*.mem

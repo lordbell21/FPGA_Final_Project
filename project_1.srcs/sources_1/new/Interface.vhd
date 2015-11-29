@@ -20,7 +20,7 @@ architecture Behavioral of Interface is
           start: in std_logic;
           bin: in std_logic_vector(7 downto 0);
           ready, done_tick: out std_logic;
-          bcd_out : out std_logic_vector (7 downto 0)
+          ascii_out : out std_logic_vector (15 downto 0)
         );
     end component;
     
@@ -31,7 +31,7 @@ architecture Behavioral of Interface is
     constant ADDR_WIDTH : integer := 4;
     constant DATA_WIDTH : integer := 8;
     signal out_data : STD_LOGIC_VECTOR(7 downto 0);
-    signal uart_conv_data : STD_LOGIC_VECTOR(7 downto 0);
+    signal uart_conv_data : STD_LOGIC_VECTOR(15 downto 0);
     
     --State machine signals
     type state_type is (idle, sort, next_read, read, done);
@@ -42,17 +42,17 @@ architecture Behavioral of Interface is
     constant BTN_STR_LEN : natural := 16;
     constant WELCOME_STR_LEN : natural := 27;
     
-    signal strEnd : natural := BTN_STR_LEN;
+    signal strEnd : natural;
     signal strIndex : natural;
     
     constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";-- 100,000,000 * 0.002 = 200,000 = clk cycles per 2 ms
-    constant MAX_STR_LEN : integer := 27;
+    constant MAX_STR_LEN : integer := 2*BTN_STR_LEN; --Worst case scenario, all values are between 10 and 99.
     
     type CHAR_ARRAY is array (integer range<>) of std_logic_vector(7 downto 0);
       
     --Contains the current string being sent over uart.
     signal sendStr : CHAR_ARRAY(0 to (WELCOME_STR_LEN - 1)) := (others => X"00");
-    signal tempStr : CHAR_ARRAY(0 to (BTN_STR_LEN - 1)) := (others => X"00");
+    signal tempStr : CHAR_ARRAY(0 to (BTN_STR_LEN-1)) := (others => X"00");
 
     constant WELCOME_STR : CHAR_ARRAY(0 to 26) := (X"0A",  --\n
                                                                   X"0D",  --\r
@@ -108,7 +108,7 @@ begin
         port map(SEND => uartSend, DATA => uartData, CLK => clk, READY => uartRdy, UART_TX => uartTX);
         
     ascii_conversion : bin2bcd
-        port map(clk => clk, reset => reset, start => start_ascii_conv, bin => out_data, ready => ready, done_tick => done_tick, bcd_out => uart_conv_data);
+        port map(clk => clk, reset => reset, start => start_ascii_conv, bin => out_data, ready => ready, done_tick => done_tick, ascii_out => uart_conv_data);
                  
     process(CLK)
         begin
@@ -143,7 +143,12 @@ begin
                             uartState <= LOAD_NEW_CHAR_2;
                         end if;
                     when LOAD_NEW_CHAR_2 =>
-                        tempStr(out_string_count) <= uart_conv_data;
+                        if uart_conv_data(15 downto 8) /= "00110000" and uart_conv_data(7 downto 0) /= "00110000" then --No need for leading zeroes.
+                            tempStr(out_string_count) <= uart_conv_data(15 downto 8);
+                            --strEnd <= strEnd + 1;
+                            out_string_count <= out_string_count + 1;
+                        end if;
+                        tempStr(out_string_count) <= uart_conv_data(7 downto 0);    
                         uartState <= LOAD_NEW_CHAR_3;
                     when LOAD_NEW_CHAR_3 =>
                         out_string_count <= out_string_count + 1;
@@ -166,7 +171,7 @@ begin
                             end if;
                         end if;
                     when WAIT_BTN =>
-                        if (done_sort = '1' and completion /= 2) then
+                        if (start_sort = '1') then
                             out_string_count <= 0;
                             uartState <= LD_BTN_STR;
                         end if;
@@ -191,6 +196,7 @@ begin
                     strEnd <= WELCOME_STR_LEN;
                 elsif (uartState = LD_BTN_STR) then
                     sendStr(0 to BTN_STR_LEN-1) <= tempStr;
+                    sendStr(BTN_STR_LEN) <= X"0D";
                     strEnd <= BTN_STR_LEN;
                 end if;
             end if;

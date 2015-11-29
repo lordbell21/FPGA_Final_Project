@@ -9,7 +9,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="24" />
+   <WVObjectSize size="18" />
    <wvobject db_ref_id="1" fp_name="/sort_test/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -89,32 +89,5 @@
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartSend" type="logic">
       <obj_property name="ElementShortName">uartSend</obj_property>
       <obj_property name="ObjectShortName">uartSend</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/ascii_conversion/bin" type="array">
-      <obj_property name="ElementShortName">bin[7:0]</obj_property>
-      <obj_property name="ObjectShortName">bin[7:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/ascii_conversion/start" type="logic">
-      <obj_property name="ElementShortName">start</obj_property>
-      <obj_property name="ObjectShortName">start</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/ascii_conversion/ready" type="logic">
-      <obj_property name="ElementShortName">ready</obj_property>
-      <obj_property name="ObjectShortName">ready</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/ascii_conversion/done_tick" type="logic">
-      <obj_property name="ElementShortName">done_tick</obj_property>
-      <obj_property name="ObjectShortName">done_tick</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/ascii_conversion/bcd1" type="array">
-      <obj_property name="ElementShortName">bcd1[3:0]</obj_property>
-      <obj_property name="ObjectShortName">bcd1[3:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/ascii_conversion/bcd0" type="array">
-      <obj_property name="ElementShortName">bcd0[3:0]</obj_property>
-      <obj_property name="ObjectShortName">bcd0[3:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
 </wave_config>

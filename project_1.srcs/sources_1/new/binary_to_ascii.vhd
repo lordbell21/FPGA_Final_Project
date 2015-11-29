@@ -2,6 +2,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
 entity bin2bcd is
    port(
       clk: in std_logic;
@@ -9,9 +10,9 @@ entity bin2bcd is
       start: in std_logic;
       bin: in std_logic_vector(7 downto 0);
       ready, done_tick: out std_logic;
-      bcd_out : out std_logic_vector (7 downto 0)
+      ascii_out : out std_logic_vector(15 downto 0)
    );
-end bin2bcd ;
+end bin2bcd;
 
 architecture arch of bin2bcd is
    type state_type is (idle, op, done);
@@ -90,5 +91,7 @@ begin
    bcd0 <= std_logic_vector(bcd0_reg);
    bcd1 <= std_logic_vector(bcd1_reg);
    
-   bcd_out <= bcd1 & bcd0;
+   ascii_out(15 downto 8) <= "0011" & bcd1;
+   ascii_out(7 downto 0) <= "0011" & bcd0;
+   
 end arch;
