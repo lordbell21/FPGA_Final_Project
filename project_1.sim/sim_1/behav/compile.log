@@ -1,0 +1,16 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch07/list_ch07_03_uart_tx.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity uart_tx
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch07/list_ch07_01_uart_rx.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity uart_rx
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch04/list_ch04_11_mod_m.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity mod_m_counter
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch04/list_ch04_20_fifo.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity fifo
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/Downloads/sorting_algo.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity sorting_algo
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch07/list_ch07_04_uart.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity uart
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/new/Interface.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity Interface
+INFO: [VRFC 10-163] Analyzing VHDL file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sim_1/imports/FPGA Final Project/sort_test.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity sort_test

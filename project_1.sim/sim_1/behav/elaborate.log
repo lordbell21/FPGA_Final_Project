@@ -1,0 +1,23 @@
+Vivado Simulator 2015.2
+Copyright 1986-1999, 2001-2015 Xilinx, Inc. All Rights Reserved.
+Running: G:/Xilinx/Vivado/2015.2/bin/unwrapped/win64.o/xelab.exe -wto ea6486985ac145daa63c6088bc4bd33e --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot sort_test_behav xil_defaultlib.sort_test -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package std.textio
+Compiling architecture arch of entity xil_defaultlib.sorting_algo [\sorting_algo(4,8)\]
+Compiling architecture arch of entity xil_defaultlib.mod_m_counter [\mod_m_counter(9,326)\]
+Compiling architecture arch of entity xil_defaultlib.uart_rx [\uart_rx(8,16)\]
+Compiling architecture arch of entity xil_defaultlib.fifo [\fifo(8,2)\]
+Compiling architecture arch of entity xil_defaultlib.uart_tx [\uart_tx(8,16)\]
+Compiling architecture str_arch of entity xil_defaultlib.uart [\uart(8,16,326,9,2)\]
+Compiling architecture behavioral of entity xil_defaultlib.Interface [interface_default]
+Compiling architecture behavioral of entity xil_defaultlib.sort_test
+Waiting for 2 sub-compilation(s) to finish...
+Built simulation snapshot sort_test_behav
