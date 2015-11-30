@@ -51,9 +51,9 @@ begin
     begin
         reset <= '0';
         start <= '0';
-        wait for 4 ns;
+        wait for 8 ms;
         start <= '1';
-        wait for 30 ms;
+        wait for 20 ms;
         start <= '0';
         wait for 500 ms;
     end process;

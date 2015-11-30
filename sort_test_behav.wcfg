@@ -9,7 +9,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="18" />
+   <WVObjectSize size="23" />
    <wvobject db_ref_id="1" fp_name="/sort_test/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -17,10 +17,6 @@
    <wvobject db_ref_id="1" fp_name="/sort_test/reset" type="logic">
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/start" type="logic">
-      <obj_property name="ElementShortName">start</obj_property>
-      <obj_property name="ObjectShortName">start</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/start_sort" type="logic">
       <obj_property name="ElementShortName">start_sort</obj_property>
@@ -61,6 +57,91 @@
       <obj_property name="ElementShortName">tempStr[0:15][7:0]</obj_property>
       <obj_property name="ObjectShortName">tempStr[0:15][7:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[0]" type="array">
+         <obj_property name="ElementShortName">[0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[0][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[1]" type="array">
+         <obj_property name="ElementShortName">[1][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[1][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[2]" type="array">
+         <obj_property name="ElementShortName">[2][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[2][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[3]" type="array">
+         <obj_property name="ElementShortName">[3][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[3][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[4]" type="array">
+         <obj_property name="ElementShortName">[4][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[4][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[5]" type="array">
+         <obj_property name="ElementShortName">[5][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[5][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[6]" type="array">
+         <obj_property name="ElementShortName">[6][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[6][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[7]" type="array">
+         <obj_property name="ElementShortName">[7][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[7][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[8]" type="array">
+         <obj_property name="ElementShortName">[8][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[8][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[9]" type="array">
+         <obj_property name="ElementShortName">[9][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[9][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[10]" type="array">
+         <obj_property name="ElementShortName">[10][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[10][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[11]" type="array">
+         <obj_property name="ElementShortName">[11][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[11][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[12]" type="array">
+         <obj_property name="ElementShortName">[12][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[12][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[13]" type="array">
+         <obj_property name="ElementShortName">[13][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[13][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[14]" type="array">
+         <obj_property name="ElementShortName">[14][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[14][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr[15]" type="array">
+         <obj_property name="ElementShortName">[15][7:0]</obj_property>
+         <obj_property name="ObjectShortName">tempStr[15][7:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart_conv_data" type="array">
+      <obj_property name="ElementShortName">uart_conv_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_conv_data[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/out_data" type="array">
       <obj_property name="ElementShortName">out_data[7:0]</obj_property>
@@ -70,6 +151,11 @@
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/out_string_count" type="other">
       <obj_property name="ElementShortName">out_string_count</obj_property>
       <obj_property name="ObjectShortName">out_string_count</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/strEnd" type="other">
+      <obj_property name="ElementShortName">strEnd</obj_property>
+      <obj_property name="ObjectShortName">strEnd</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/strIndex" type="other">
@@ -89,5 +175,24 @@
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartSend" type="logic">
       <obj_property name="ElementShortName">uartSend</obj_property>
       <obj_property name="ObjectShortName">uartSend</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/txState" type="other">
+      <obj_property name="ElementShortName">txState</obj_property>
+      <obj_property name="ObjectShortName">txState</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/txData" type="array">
+      <obj_property name="ElementShortName">txData[9:0]</obj_property>
+      <obj_property name="ObjectShortName">txData[9:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/bitIndex" type="other">
+      <obj_property name="ElementShortName">bitIndex</obj_property>
+      <obj_property name="ObjectShortName">bitIndex</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/bitTmr" type="array">
+      <obj_property name="ElementShortName">bitTmr[13:0]</obj_property>
+      <obj_property name="ObjectShortName">bitTmr[13:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>
