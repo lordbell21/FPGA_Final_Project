@@ -39,7 +39,7 @@ architecture Behavioral of Interface is
     signal completion : integer range 0 to 2 := 0;
     
     --BTN_STR_LEN is the length of the array of numbers. 
-    constant BTN_STR_LEN : natural := 16;
+    constant BTN_STR_LEN : natural := 16; -- +1 for "0D"
     constant WELCOME_STR_LEN : natural := 27;
     
     signal strEnd : natural;
@@ -91,8 +91,13 @@ architecture Behavioral of Interface is
     signal out_string_count : integer range 0 to BTN_STR_LEN := 0;
     
     --Current uart state signal
-    type UART_STATE_TYPE is (RST_REG, LD_INIT_STR, LOAD_NEW_CHAR, LOAD_NEW_CHAR_2, LOAD_NEW_CHAR_3, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
+    type UART_STATE_TYPE is (RST_REG, LD_INIT_STR, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
     signal uartState : UART_STATE_TYPE := RST_REG;
+    
+    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, LOAD_NEW_CHAR_2, LOAD_NEW_CHAR_3, DONE);
+    signal stringState : STRING_LOAD := IDLE;
+    
+    signal done_load : std_logic := '0';
     
     --this counter counts the amount of time paused in the UART reset state
     signal reset_cntr : std_logic_vector (17 downto 0) := (others=>'0');
@@ -109,6 +114,54 @@ begin
         
     ascii_conversion : bin2bcd
         port map(clk => clk, reset => reset, start => start_ascii_conv, bin => out_data, ready => ready, done_tick => done_tick, ascii_out => uart_conv_data);
+        
+    BTN_load_process : process(CLK)
+    begin
+        if rising_edge(clk) then
+            if (reset = '1') then
+                stringState <= IDLE;
+                done_load <= '0';
+                completion <= 0;
+                out_string_count <= 0;
+            else
+                case stringState is
+                    when IDLE =>
+                        done_load <= '0';
+                        if done_sort = '1' and completion < 1 then
+                            request_out <= '1';
+                            stringState <= LOAD_NEW_CHAR;
+                        end if;
+                    when LOAD_NEW_CHAR =>
+                        request_out <= '0';
+                        start_ascii_conv <= '1';
+                        if done_tick = '1' then
+                            start_ascii_conv <= '0';
+                            stringState <= LOAD_NEW_CHAR_2;
+                        end if;
+                    when LOAD_NEW_CHAR_2 =>
+                        if uart_conv_data(15 downto 8) /= "00110000" and uart_conv_data(7 downto 0) /= "00110000" then --No need for leading zeroes.
+                            tempStr(out_string_count) <= uart_conv_data(15 downto 8);
+                            out_string_count <= out_string_count + 1;
+                        end if;
+                        tempStr(out_string_count) <= uart_conv_data(7 downto 0);    
+                        stringState <= LOAD_NEW_CHAR_3;
+                    when LOAD_NEW_CHAR_3 =>
+                        request_out <= '1';
+                        if out_string_count = BTN_STR_LEN-1 then
+                            stringState <= DONE;
+                        else
+                            out_string_count <= out_string_count + 1;
+                            stringState <= LOAD_NEW_CHAR;
+                        end if;
+                    when DONE =>
+                        done_load <= '1';
+                        --tempStr(out_string_count) <= X"0D"; 
+                        completion <= 1;   
+                        stringState <= IDLE;            
+                end case;
+            end if;        
+        end if;
+    end process;
                  
     process(CLK)
         begin
@@ -127,65 +180,34 @@ begin
             if (rising_edge(CLK)) then
                 if (reset = '1') then
                     uartState <= RST_REG;
-                    completion <= 0;
-                    request_out <= '0';
-                    out_string_count <= 0;
-                else
+                else    
                     case uartState is 
-                        when RST_REG =>
-                            if (reset_cntr = RESET_CNTR_MAX) then
-                              uartState <= LD_INIT_STR;
-                            end if;
-                        when LD_INIT_STR =>
-                            uartState <= SEND_CHAR;
-                        when LOAD_NEW_CHAR =>
-                            request_out <= '0';
-                            start_ascii_conv <= '1';
-                            if done_tick = '1' then
-                                start_ascii_conv <= '0';
-                                uartState <= LOAD_NEW_CHAR_2;
-                            end if;
-                        when LOAD_NEW_CHAR_2 =>
-                            if uart_conv_data(15 downto 8) /= "00110000" and uart_conv_data(7 downto 0) /= "00110000" then --No need for leading zeroes.
-                                tempStr(out_string_count) <= uart_conv_data(15 downto 8);
-                                --strEnd <= strEnd + 1;
-                                out_string_count <= out_string_count + 1;
-                            end if;
-                            tempStr(out_string_count) <= uart_conv_data(7 downto 0);    
-                            uartState <= LOAD_NEW_CHAR_3;
-                        when LOAD_NEW_CHAR_3 =>
-                            out_string_count <= out_string_count + 1;
-                            request_out <= '1';
-                            if out_string_count = BTN_STR_LEN-1 then
-                                uartState <= LD_BTN_STR;
+                    when RST_REG =>
+                        if (reset_cntr = RESET_CNTR_MAX) then
+                          uartState <= LD_INIT_STR;
+                        end if;
+                    when LD_INIT_STR =>
+                        uartState <= SEND_CHAR;
+                    when SEND_CHAR =>
+                        uartState <= RDY_LOW;
+                    when RDY_LOW =>
+                        uartState <= WAIT_RDY;
+                    when WAIT_RDY =>
+                        if (uartRdy = '1') then
+                            if (strEnd = strIndex) then
+                                uartState <= WAIT_BTN;
                             else
-                                uartState <= LOAD_NEW_CHAR;
+                                uartState <= SEND_CHAR;
                             end if;
-                        when SEND_CHAR =>
-                            uartState <= RDY_LOW;
-                        when RDY_LOW =>
-                            uartState <= WAIT_RDY;
-                        when WAIT_RDY =>
-                            if (uartRdy = '1') then
-                                if (strEnd = strIndex) then
-                                    completion <= completion + 1;
-                                    uartState <= WAIT_BTN;
-                                else
-                                    uartState <= SEND_CHAR;
-                                end if;
-                            end if;
-                        when WAIT_BTN =>
-                            if done_sort = '1' and completion <= 1 then
-                            --if start_sort = '1' and completion <= 1 then 
-                                completion <= completion + 1;
-                                out_string_count <= 0;
-                                request_out <= '1';
-                                uartState <= LOAD_NEW_CHAR;                           
-                            end if;
-                        when LD_BTN_STR =>
-                            uartState <= SEND_CHAR;
-                        when others=> --should never be reached
-                            uartState <= RST_REG;
+                        end if;
+                    when WAIT_BTN =>
+                        if (done_load = '1') then
+                            uartState <= LD_BTN_STR;
+                        end if;
+                    when LD_BTN_STR =>
+                        uartState <= SEND_CHAR;
+                    when others=> --should never be reached
+                        uartState <= RST_REG;
                     end case;
                 end if ;
             end if;
@@ -201,9 +223,6 @@ begin
                     strEnd <= WELCOME_STR_LEN;
                 elsif (uartState = LD_BTN_STR) then
                     sendStr(0 to BTN_STR_LEN-1) <= tempStr;
-                    sendStr(BTN_STR_LEN) <= X"0D";
-                    strEnd <= BTN_STR_LEN+1;
-                elsif uartState = WAIT_BTN then
                     strEnd <= BTN_STR_LEN;
                 end if;
             end if;
@@ -214,9 +233,10 @@ begin
         char_count_process : process (CLK)
         begin
             if (rising_edge(CLK)) then
-                if (uartState = LD_INIT_STR or uartState = LD_BTN_STR or uartState = WAIT_BTN) then
+                if (uartState = LD_INIT_STR or uartState = LD_BTN_STR) then
                     strIndex <= 0;
-                elsif (uartState = SEND_CHAR) then
+                --elsif (uartState = SEND_CHAR) then
+                elsif uartState = RDY_LOW then
                     strIndex <= strIndex + 1;
                 end if;
             end if;
