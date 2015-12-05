@@ -107,8 +107,8 @@ begin
 
     sorting_algorithm : entity work.sorting_algo(arch)
         generic map(ADDR_WIDTH => ADDR_WIDTH, DATA_WIDTH => DATA_WIDTH)
-        port map(clk => clk, start_sort => start_sort, done_sort => done_sort, request_out => request_out, out_data => out_data, reset => reset);
-    
+        port map(clk => clk, start_sort => start, done_sort => done_sort, request_out => request_out, out_data => out_data, reset => reset);
+   
     uart : entity work.uart_tx_ctrl
         port map(SEND => uartSend, DATA => uartData, CLK => clk, READY => uartRdy, UART_TX => uartTX);
         

@@ -70,3 +70,8 @@ project_1.sim/sim_1/behav/sort_test_behav.wdb
 *.mem
 *.vdb
 *.exe
+*.log
+*.jou
+*.info
+*.xml
+*.html

@@ -44,6 +44,11 @@ proc step_failed { step } {
 
 set_msg_config -id {HDL 9-1061} -limit 100000
 set_msg_config -id {HDL 9-1654} -limit 100000
+set_msg_config  -string {{temp_reg}}  -suppress 
+set_msg_config  -string {{mem_reg}}  -suppress 
+set_msg_config  -string {{tempStr}}  -suppress 
+set_msg_config  -string {{sendStr}}  -suppress 
+set_msg_config  -string {{strEnd}}  -suppress 
 
 start_step init_design
 set rc [catch {

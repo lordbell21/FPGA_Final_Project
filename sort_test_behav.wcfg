@@ -3,13 +3,13 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="sort_test_behav2.wdb" id="1">
+      <db_ref path="sort_test_func_impl.wdb" id="1">
          <top_modules>
             <top_module name="sort_test" />
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="30" />
    <wvobject db_ref_id="1" fp_name="/sort_test/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -18,109 +18,136 @@
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/start_sort" type="logic">
-      <obj_property name="ElementShortName">start_sort</obj_property>
-      <obj_property name="ObjectShortName">start_sort</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sort_test/start" type="logic">
+      <obj_property name="ElementShortName">start</obj_property>
+      <obj_property name="ObjectShortName">start</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/start_IBUF" type="logic">
+      <obj_property name="ElementShortName">start_IBUF</obj_property>
+      <obj_property name="ObjectShortName">start_IBUF</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/tx" type="logic">
       <obj_property name="ElementShortName">tx</obj_property>
       <obj_property name="ObjectShortName">tx</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/completion" type="other">
-      <obj_property name="ElementShortName">completion</obj_property>
-      <obj_property name="ObjectShortName">completion</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/done_sort" type="logic">
       <obj_property name="ElementShortName">done_sort</obj_property>
       <obj_property name="ObjectShortName">done_sort</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/done_load" type="logic">
-      <obj_property name="ElementShortName">done_load</obj_property>
-      <obj_property name="ObjectShortName">done_load</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartState" type="array">
+      <obj_property name="ElementShortName">uartState[2:0]</obj_property>
+      <obj_property name="ObjectShortName">uartState[2:0]</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/request_out" type="logic">
-      <obj_property name="ElementShortName">request_out</obj_property>
-      <obj_property name="ObjectShortName">request_out</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/stringState" type="array">
+      <obj_property name="ElementShortName">stringState[2:0]</obj_property>
+      <obj_property name="ObjectShortName">stringState[2:0]</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartState" type="other">
-      <obj_property name="ElementShortName">uartState</obj_property>
-      <obj_property name="ObjectShortName">uartState</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/mem" type="array">
-      <obj_property name="ElementShortName">mem[0:15][7:0]</obj_property>
-      <obj_property name="ObjectShortName">mem[0:15][7:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sendStr" type="array">
-      <obj_property name="ElementShortName">sendStr[0:26][7:0]</obj_property>
-      <obj_property name="ObjectShortName">sendStr[0:26][7:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/tempStr" type="array">
-      <obj_property name="ElementShortName">tempStr[0:16][7:0]</obj_property>
-      <obj_property name="ObjectShortName">tempStr[0:16][7:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/stringState" type="other">
-      <obj_property name="ElementShortName">stringState</obj_property>
-      <obj_property name="ObjectShortName">stringState</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart_conv_data" type="array">
-      <obj_property name="ElementShortName">uart_conv_data[15:0]</obj_property>
-      <obj_property name="ObjectShortName">uart_conv_data[15:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/out_data" type="array">
-      <obj_property name="ElementShortName">out_data[7:0]</obj_property>
-      <obj_property name="ObjectShortName">out_data[7:0]</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/out_string_count" type="other">
-      <obj_property name="ElementShortName">out_string_count</obj_property>
-      <obj_property name="ObjectShortName">out_string_count</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/strEnd" type="other">
-      <obj_property name="ElementShortName">strEnd</obj_property>
-      <obj_property name="ObjectShortName">strEnd</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/strIndex" type="other">
-      <obj_property name="ElementShortName">strIndex</obj_property>
-      <obj_property name="ObjectShortName">strIndex</obj_property>
-      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/strEnd" type="array">
+      <obj_property name="ElementShortName">strEnd[3:3]</obj_property>
+      <obj_property name="ObjectShortName">strEnd[3:3]</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartData" type="array">
-      <obj_property name="ElementShortName">uartData[7:0]</obj_property>
-      <obj_property name="ObjectShortName">uartData[7:0]</obj_property>
+      <obj_property name="ElementShortName">uartData[6:0]</obj_property>
+      <obj_property name="ObjectShortName">uartData[6:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartRdy" type="logic">
-      <obj_property name="ElementShortName">uartRdy</obj_property>
-      <obj_property name="ObjectShortName">uartRdy</obj_property>
+   <wvobject fp_name="vbus112" type="vbus">
+      <obj_property name="label">Sorting State</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartSend" type="logic">
       <obj_property name="ElementShortName">uartSend</obj_property>
       <obj_property name="ObjectShortName">uartSend</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/txState" type="other">
-      <obj_property name="ElementShortName">txState</obj_property>
-      <obj_property name="ObjectShortName">txState</obj_property>
-   </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/txData" type="array">
-      <obj_property name="ElementShortName">txData[9:0]</obj_property>
-      <obj_property name="ObjectShortName">txData[9:0]</obj_property>
-      <obj_property name="Radix">BINARYRADIX</obj_property>
+      <obj_property name="ElementShortName">txData[7:1]</obj_property>
+      <obj_property name="ObjectShortName">txData[7:1]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/bitIndex" type="other">
-      <obj_property name="ElementShortName">bitIndex</obj_property>
-      <obj_property name="ObjectShortName">bitIndex</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/state_reg_0" type="array">
+      <obj_property name="ElementShortName">state_reg_0[2:0]</obj_property>
+      <obj_property name="ObjectShortName">state_reg_0[2:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/bitTmr" type="array">
-      <obj_property name="ElementShortName">bitTmr[13:0]</obj_property>
-      <obj_property name="ObjectShortName">bitTmr[13:0]</obj_property>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[0]_17\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[0]_17\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[0]_17\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[1]_18\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[1]_18\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[1]_18\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[2]_19\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[2]_19\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[2]_19\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[3]_20\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[3]_20\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[3]_20\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[4]_21\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[4]_21\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[4]_21\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[5]_22\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[5]_22\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[5]_22\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[6]_23\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[6]_23\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[6]_23\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[7]_24\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[7]_24\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[7]_24\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[8]_25\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[8]_25\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[8]_25\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[9]_26\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[9]_26\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[9]_26\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[10]_27\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[10]_27\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[10]_27\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[11]_28\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[11]_28\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[11]_28\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[12]_29\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[12]_29\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[12]_29\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[13]_30\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[13]_30\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[13]_30\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[14]_31\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[14]_31\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[14]_31\[3:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/\mem_reg[15]_32\" type="array">
+      <obj_property name="ElementShortName">\mem_reg[15]_32\[3:0]</obj_property>
+      <obj_property name="ObjectShortName">\mem_reg[15]_32\[3:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
 </wave_config>
