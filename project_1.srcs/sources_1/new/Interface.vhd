@@ -28,7 +28,7 @@ architecture Behavioral of Interface is
     
     -- UUT signals
     signal done_sort, start_sort, request_out : STD_LOGIC := '0';
-    constant ADDR_WIDTH : integer := 4;
+    constant ADDR_WIDTH : integer := 7;
     constant DATA_WIDTH : integer := 8;
     signal out_data : STD_LOGIC_VECTOR(7 downto 0);
     signal uart_conv_data : STD_LOGIC_VECTOR(23 downto 0);
@@ -36,8 +36,8 @@ architecture Behavioral of Interface is
     signal completion : integer range 0 to 2 := 0;
     
     --BTN_STR_LEN is the length of the array of numbers. 
-    signal BTN_STR_LEN : natural := 16;
-    constant INIT_BTN_STR_LEN : natural := 16; 
+    signal BTN_STR_LEN : natural := 2**ADDR_WIDTH;
+    constant INIT_BTN_STR_LEN : natural := 2**ADDR_WIDTH; 
     --constant WELCOME_STR_LEN : natural := 27;
     
     signal strEnd : natural := INIT_BTN_STR_LEN;
