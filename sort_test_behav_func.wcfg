@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="sort_test_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="sort_test" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="13" />
+   <wvobject db_ref_id="1" fp_name="/sort_test/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/reset" type="logic">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/start" type="logic">
+      <obj_property name="ElementShortName">start</obj_property>
+      <obj_property name="ObjectShortName">start</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/tx" type="logic">
+      <obj_property name="ElementShortName">tx</obj_property>
+      <obj_property name="ObjectShortName">tx</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/done_sort" type="logic">
+      <obj_property name="ElementShortName">done_sort</obj_property>
+      <obj_property name="ObjectShortName">done_sort</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartState" type="other">
+      <obj_property name="ElementShortName">uartState</obj_property>
+      <obj_property name="ObjectShortName">uartState</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/stringState" type="other">
+      <obj_property name="ElementShortName">stringState</obj_property>
+      <obj_property name="ObjectShortName">stringState</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/strEnd" type="other">
+      <obj_property name="ElementShortName">strEnd</obj_property>
+      <obj_property name="ObjectShortName">strEnd</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartData" type="array">
+      <obj_property name="ElementShortName">uartData[7:0]</obj_property>
+      <obj_property name="ObjectShortName">uartData[7:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/mem" type="array">
+      <obj_property name="ElementShortName">mem[0:15][7:0]</obj_property>
+      <obj_property name="ObjectShortName">mem[0:15][7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/sorting_algorithm/temp" type="array">
+      <obj_property name="ElementShortName">temp[0:15][7:0]</obj_property>
+      <obj_property name="ObjectShortName">temp[0:15][7:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartSend" type="logic">
+      <obj_property name="ElementShortName">uartSend</obj_property>
+      <obj_property name="ObjectShortName">uartSend</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/uart/txData" type="array">
+      <obj_property name="ElementShortName">txData[9:0]</obj_property>
+      <obj_property name="ObjectShortName">txData[9:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+</wave_config>

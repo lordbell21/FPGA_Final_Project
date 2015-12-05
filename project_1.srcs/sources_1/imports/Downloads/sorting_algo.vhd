@@ -22,7 +22,7 @@ architecture arch of sorting_algo is
  
     constant MEM_DEPTH : integer := 2**ADDR_WIDTH;
     constant MEM_MAX : integer := 2**ADDR_WIDTH-1;
-    type mem_type is array (0 to MEM_DEPTH-1) of signed(DATA_WIDTH-1 downto 0);
+    type mem_type is array (0 to MEM_DEPTH-1) of unsigned(DATA_WIDTH-1 downto 0);
  
     impure function init_mem(mif_file_name : in string) return mem_type is
         file mif_file : text open read_mode is mif_file_name;
@@ -33,22 +33,22 @@ architecture arch of sorting_algo is
             for i in mem_type'range loop
                 readline(mif_file, mif_line);
                 read(mif_line, temp_bv);
-                temp_mem(i) := signed(to_stdlogicvector(temp_bv));
+                temp_mem(i) := unsigned(to_stdlogicvector(temp_bv));
             end loop;
             return temp_mem;
         end function;
        
-    signal mem : mem_type := init_mem("mem_init_vhd.mif");
-    signal temp : mem_type;
+    signal mem, temp : mem_type := init_mem("mem_init_vhd.mif");
+    
    
     type state_type is (idle, start, loop1, loop2, loop3, loop4, final, read_rdy, data_prep);
     signal state_reg : state_type;
-    signal block_reg, block_next : integer;
-    signal start_reg, start_next, lo_reg, lo_next, mid_reg, mid_next, hi_reg, hi_next: integer;
-    signal i_reg, i_next, j_reg, j_next, k_reg, k_next : integer;
-    signal done_reg, done_next: std_logic;
-    signal dat_reg, dat_next : std_logic_vector(DATA_WIDTH-1 downto 0);
-    signal it_reg, it_next : integer;
+    signal block_reg, block_next : integer := 0;
+    signal start_reg, start_next, lo_reg, lo_next, mid_reg, mid_next, hi_reg, hi_next: integer := 0;
+    signal i_reg, i_next, j_reg, j_next, k_reg, k_next : integer := 0;
+    signal done_reg, done_next: std_logic := '0';
+    signal dat_reg, dat_next : std_logic_vector(DATA_WIDTH-1 downto 0) := (others => '0');
+    signal it_reg, it_next : integer := 0;
 begin
  
     done_sort <= done_reg;

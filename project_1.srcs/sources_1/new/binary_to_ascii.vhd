@@ -10,7 +10,7 @@ entity bin2bcd is
       start: in std_logic;
       bin: in std_logic_vector(7 downto 0);
       ready, done_tick: out std_logic;
-      ascii_out : out std_logic_vector(15 downto 0)
+      ascii_out : out std_logic_vector(23 downto 0)
    );
 end bin2bcd;
 
@@ -31,12 +31,14 @@ begin
          state_reg <= idle;
          p2s_reg <= (others=>'0');
          n_reg <= (others=>'0');
+         bcd2_reg <= (others=>'0');
          bcd1_reg <= (others=>'0');
          bcd0_reg <= (others=>'0');
       elsif (rising_edge(clk)) then
          state_reg <= state_next;
          p2s_reg <= p2s_next;
          n_reg <= n_next;
+         bcd2_reg <= bcd2_next;
          bcd1_reg <= bcd1_next;
          bcd0_reg <= bcd0_next;
       end if;
@@ -53,12 +55,14 @@ begin
       p2s_next <= p2s_reg;
       bcd0_next <= bcd0_reg;
       bcd1_next <= bcd1_reg;
+      bcd2_next <= bcd2_reg;
       n_next <= n_reg;
       case state_reg is
          when idle =>
             ready <= '1';
             if start='1' then
                state_next <= op;
+               bcd2_next <= (others=>'0');
                bcd1_next <= (others=>'0');
                bcd0_next <= (others=>'0');
                n_next <="1000";  -- index
@@ -71,6 +75,7 @@ begin
             -- shift 4 BCD digits
             bcd0_next <= bcd0_tmp(2 downto 0) & p2s_reg(7);
             bcd1_next <= bcd1_tmp(2 downto 0) & bcd0_tmp(3);
+            bcd2_next <= bcd2_tmp(2 downto 0) & bcd1_tmp(3);
             n_next <= n_reg - 1;
             if (n_next=0) then
                 state_next <= done;
@@ -86,11 +91,14 @@ begin
                bcd0_reg;
    bcd1_tmp <= bcd1_reg + 3 when bcd1_reg > 4 else
                bcd1_reg;
-
+   bcd2_tmp <= bcd2_reg + 3 when bcd2_reg > 4 else
+               bcd2_reg;
    -- output
    bcd0 <= std_logic_vector(bcd0_reg);
    bcd1 <= std_logic_vector(bcd1_reg);
+   bcd2 <= std_logic_vector(bcd2_reg);
    
+   ascii_out(23 downto 16) <= "0011" & bcd2;
    ascii_out(15 downto 8) <= "0011" & bcd1;
    ascii_out(7 downto 0) <= "0011" & bcd0;
    

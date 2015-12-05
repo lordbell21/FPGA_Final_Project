@@ -58,7 +58,7 @@ begin
         start <= '1';
         wait for 2 ms;
         start <= '0';
-        wait for 20 ms;
+        wait for 40 ms;
     end process;
 
 end Behavioral;

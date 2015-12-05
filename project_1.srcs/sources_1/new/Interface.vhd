@@ -20,7 +20,7 @@ architecture Behavioral of Interface is
           start: in std_logic;
           bin: in std_logic_vector(7 downto 0);
           ready, done_tick: out std_logic;
-          ascii_out : out std_logic_vector (15 downto 0)
+          ascii_out : out std_logic_vector (23 downto 0)
         );
     end component;
     
@@ -31,70 +31,41 @@ architecture Behavioral of Interface is
     constant ADDR_WIDTH : integer := 4;
     constant DATA_WIDTH : integer := 8;
     signal out_data : STD_LOGIC_VECTOR(7 downto 0);
-    signal uart_conv_data : STD_LOGIC_VECTOR(15 downto 0);
+    signal uart_conv_data : STD_LOGIC_VECTOR(23 downto 0);
     
-    --State machine signals
-    type state_type is (idle, sort, next_read, read, done);
-    signal state_reg, state_next : state_type;
     signal completion : integer range 0 to 2 := 0;
     
     --BTN_STR_LEN is the length of the array of numbers. 
-    constant BTN_STR_LEN : natural := 16; -- +1 for "0D"
-    constant WELCOME_STR_LEN : natural := 27;
+    signal BTN_STR_LEN : natural := 16;
+    constant INIT_BTN_STR_LEN : natural := 16; 
+    --constant WELCOME_STR_LEN : natural := 27;
     
-    signal strEnd : natural;
+    signal strEnd : natural := INIT_BTN_STR_LEN;
     signal strIndex : natural;
     
     constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";-- 100,000,000 * 0.002 = 200,000 = clk cycles per 2 ms
-    constant MAX_STR_LEN : integer := 2*BTN_STR_LEN; --Worst case scenario, all values are between 10 and 99.
+    constant MAX_STR_LEN : integer := 4*INIT_BTN_STR_LEN; --Worst case scenario, all values are between 10 and 255. Also, spaces between each number
     
     type CHAR_ARRAY is array (integer range<>) of std_logic_vector(7 downto 0);
       
     --Contains the current string being sent over uart.
-    signal sendStr : CHAR_ARRAY(0 to (WELCOME_STR_LEN - 1)) := (others => X"00");
-    signal tempStr : CHAR_ARRAY(0 to (BTN_STR_LEN-1)) := (others => X"00");
-
-    constant WELCOME_STR : CHAR_ARRAY(0 to 26) := (X"0A",  --\n
-                                                                  X"0D",  --\r
-                                                                  X"42",  --B
-                                                                  X"41",  --A
-                                                                  X"53",  --S
-                                                                  X"59",  --Y
-                                                                  X"53",  --S
-                                                                  X"33",  --3
-                                                                  X"20",  -- 
-                                                                  X"47",  --G
-                                                                  X"50",  --P
-                                                                  X"49",  --I
-                                                                  X"4F",  --O
-                                                                  X"2F",  --/
-                                                                  X"55",  --U
-                                                                  X"41",  --A
-                                                                  X"52",  --R
-                                                                  X"54",  --T
-                                                                  X"20",  -- 
-                                                                  X"44",  --D
-                                                                  X"45",  --E
-                                                                  X"4D",  --M
-                                                                  X"4F",  --O
-                                                                  X"21",  --!
-                                                                  X"0A",  --\n
-                                                                  X"0A",  --\n
-                                                                  X"0D"); --\r
-    
+    signal sendStr : CHAR_ARRAY(0 to (MAX_STR_LEN - 1)) := (others => X"00");
+    signal tempStr : CHAR_ARRAY(0 to (MAX_STR_LEN - 1)) := (others => X"00");
+   
     --UART_TX_CTRL control signals
     signal uartRdy : std_logic;
     signal uartSend : std_logic := '0';
     signal uartData : std_logic_vector (7 downto 0):= "00000000";
     signal uartTX : std_logic;
     
-    signal out_string_count : integer range 0 to BTN_STR_LEN := 0;
+    signal out_string_count : integer  := 0;
     
     --Current uart state signal
-    type UART_STATE_TYPE is (RST_REG, LD_INIT_STR, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
+    --type UART_STATE_TYPE is (RST_REG, LD_INIT_STR, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
+    type UART_STATE_TYPE is (RST_REG, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
     signal uartState : UART_STATE_TYPE := RST_REG;
     
-    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, LOAD_NEW_CHAR_2, LOAD_NEW_CHAR_3, DONE);
+    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, LOAD_NEW_CHAR_2, LOAD_HUNDREDS, LOAD_TENS, LOAD_ONES, LOAD_SPACE, LOAD_NEW_CHAR_3, DONE);
     signal stringState : STRING_LOAD := IDLE;
     
     signal done_load : std_logic := '0';
@@ -123,10 +94,12 @@ begin
                 done_load <= '0';
                 completion <= 0;
                 out_string_count <= 0;
+                BTN_STR_LEN <= INIT_BTN_STR_LEN;
             else
                 case stringState is
                     when IDLE =>
                         done_load <= '0';
+                        out_string_count <= 0;
                         if done_sort = '1' and completion < 1 then
                             request_out <= '1';
                             stringState <= LOAD_NEW_CHAR;
@@ -138,12 +111,31 @@ begin
                             start_ascii_conv <= '0';
                             stringState <= LOAD_NEW_CHAR_2;
                         end if;
-                    when LOAD_NEW_CHAR_2 =>
-                        if uart_conv_data(15 downto 8) /= "00110000" and uart_conv_data(7 downto 0) /= "00110000" then --No need for leading zeroes.
-                            tempStr(out_string_count) <= uart_conv_data(15 downto 8);
-                            out_string_count <= out_string_count + 1;
+                     when LOAD_NEW_CHAR_2 =>
+                        if uart_conv_data(23 downto 16) /= "00110000" then --No need for leading zeroes.
+                            stringState <= LOAD_HUNDREDS;
+                        elsif uart_conv_data(15 downto 8) /= "00110000" then
+                            stringState <= LOAD_TENS;
+                        else
+                            stringState <= LOAD_ONES;
                         end if;
-                        tempStr(out_string_count) <= uart_conv_data(7 downto 0);    
+                    when LOAD_HUNDREDS =>
+                        tempStr(out_string_count) <= uart_conv_data(23 downto 16);
+                        out_string_count <= out_string_count + 1;
+                        BTN_STR_LEN <= BTN_STR_LEN + 1;
+                        stringState <= LOAD_TENS;
+                    when LOAD_TENS =>
+                        tempStr(out_string_count) <= uart_conv_data(15 downto 8);
+                        out_string_count <= out_string_count + 1;
+                        BTN_STR_LEN <= BTN_STR_LEN + 1;
+                        stringState <= LOAD_ONES; 
+                    when LOAD_ONES =>
+                        tempStr(out_string_count) <= uart_conv_data(7 downto 0);
+                        out_string_count <= out_string_count + 1;
+                        stringState <= LOAD_SPACE;
+                    when LOAD_SPACE =>
+                        tempStr(out_string_count) <= X"20"; 
+                        BTN_STR_LEN <= BTN_STR_LEN + 1;
                         stringState <= LOAD_NEW_CHAR_3;
                     when LOAD_NEW_CHAR_3 =>
                         request_out <= '1';
@@ -184,10 +176,8 @@ begin
                     case uartState is 
                     when RST_REG =>
                         if (reset_cntr = RESET_CNTR_MAX) then
-                          uartState <= LD_INIT_STR;
+                          uartState <= WAIT_BTN;
                         end if;
-                    when LD_INIT_STR =>
-                        uartState <= SEND_CHAR;
                     when SEND_CHAR =>
                         uartState <= RDY_LOW;
                     when RDY_LOW =>
@@ -218,11 +208,8 @@ begin
         string_load_process : process (CLK)
         begin
             if (rising_edge(CLK)) then
-                if (uartState = LD_INIT_STR) then
-                    sendStr <= WELCOME_STR;
-                    strEnd <= WELCOME_STR_LEN;
-                elsif (uartState = LD_BTN_STR) then
-                    sendStr(0 to BTN_STR_LEN-1) <= tempStr;
+                if uartState = LD_BTN_STR then
+                    sendStr <= tempStr;
                     strEnd <= BTN_STR_LEN;
                 end if;
             end if;
@@ -233,10 +220,9 @@ begin
         char_count_process : process (CLK)
         begin
             if (rising_edge(CLK)) then
-                if (uartState = LD_INIT_STR or uartState = LD_BTN_STR) then
+                if (uartState = LD_BTN_STR) then                
                     strIndex <= 0;
-                --elsif (uartState = SEND_CHAR) then
-                elsif uartState = RDY_LOW then
+                elsif uartState = RDY_LOW then --This worked when I didn't start making my edits.
                     strIndex <= strIndex + 1;
                 end if;
             end if;

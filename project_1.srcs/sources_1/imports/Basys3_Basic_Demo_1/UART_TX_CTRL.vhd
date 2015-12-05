@@ -69,7 +69,7 @@ signal bitIndex : natural;
 signal txBit : std_logic := '1';
 
 --A register that contains the whole data packet to be sent, including start and stop bits. 
-signal txData : std_logic_vector(9 downto 0);
+signal txData : std_logic_vector(9 downto 0) := (others => '0');
 
 signal txState : TX_STATE_TYPE := RDY;
 
