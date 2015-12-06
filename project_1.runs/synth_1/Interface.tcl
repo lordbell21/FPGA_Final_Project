@@ -20,14 +20,8 @@ set_property parent.project_path G:/Users/Steven/FPGADesignProjects/final_projec
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
 read_vhdl -library xil_defaultlib {
-  G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch07/list_ch07_03_uart_tx.vhd
-  G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch07/list_ch07_01_uart_rx.vhd
-  G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch04/list_ch04_20_fifo.vhd
-  G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch04/list_ch04_11_mod_m.vhd
-  G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/ch07/list_ch07_04_uart.vhd
   G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/Basys3_Basic_Demo_1/UART_TX_CTRL.vhd
   G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/Downloads/sorting_algo.vhd
-  G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/imports/new/db_fsm_book.vhd
   G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/new/Interface.vhd
   G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.srcs/sources_1/new/binary_to_ascii.vhd
 }

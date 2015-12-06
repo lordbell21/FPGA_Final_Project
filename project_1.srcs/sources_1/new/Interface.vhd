@@ -27,7 +27,7 @@ architecture Behavioral of Interface is
     signal done_tick, ready, start_ascii_conv : std_logic := '0';
     
     -- UUT signals
-    signal done_sort, start_sort, request_out : STD_LOGIC := '0';
+    signal done_sort, request_out : STD_LOGIC := '0';
     constant ADDR_WIDTH : integer := 7;
     constant DATA_WIDTH : integer := 8;
     signal out_data : STD_LOGIC_VECTOR(7 downto 0);
@@ -73,8 +73,6 @@ architecture Behavioral of Interface is
     --this counter counts the amount of time paused in the UART reset state
     signal reset_cntr : std_logic_vector (17 downto 0) := (others=>'0');
 begin
-    debounce : entity work.db_fsm
-        port map(clk => clk, reset => reset, sw => start, db => start_sort);
 
     sorting_algorithm : entity work.sorting_algo(arch)
         generic map(ADDR_WIDTH => ADDR_WIDTH, DATA_WIDTH => DATA_WIDTH)
