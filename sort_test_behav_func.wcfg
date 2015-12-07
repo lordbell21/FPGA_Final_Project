@@ -9,7 +9,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="20" />
+   <WVObjectSize size="21" />
    <wvobject db_ref_id="1" fp_name="/sort_test/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -33,10 +33,6 @@
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/uartState" type="other">
       <obj_property name="ElementShortName">uartState</obj_property>
       <obj_property name="ObjectShortName">uartState</obj_property>
-   </wvobject>
-   <wvobject db_ref_id="1" fp_name="/sort_test/interface/stringState" type="other">
-      <obj_property name="ElementShortName">stringState</obj_property>
-      <obj_property name="ObjectShortName">stringState</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/strEnd" type="other">
       <obj_property name="ElementShortName">strEnd</obj_property>
@@ -104,6 +100,10 @@
       <obj_property name="ObjectShortName">temp[0:7][15:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/stringState" type="other">
+      <obj_property name="ElementShortName">stringState</obj_property>
+      <obj_property name="ObjectShortName">stringState</obj_property>
+   </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/BTN_STR_LEN" type="other">
       <obj_property name="ElementShortName">BTN_STR_LEN</obj_property>
       <obj_property name="ObjectShortName">BTN_STR_LEN</obj_property>
@@ -144,6 +144,10 @@
       <obj_property name="ElementShortName">tempStr[0:23][7:0]</obj_property>
       <obj_property name="ObjectShortName">tempStr[0:23][7:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject db_ref_id="1" fp_name="/sort_test/interface/reverse_control" type="logic">
+      <obj_property name="ElementShortName">reverse_control</obj_property>
+      <obj_property name="ObjectShortName">reverse_control</obj_property>
    </wvobject>
    <wvobject db_ref_id="1" fp_name="/sort_test/interface/done_load" type="logic">
       <obj_property name="ElementShortName">done_load</obj_property>

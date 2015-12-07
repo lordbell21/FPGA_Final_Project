@@ -44,7 +44,7 @@ architecture Behavioral of Interface is
     signal strIndex : natural;
     
     constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";-- 100,000,000 * 0.002 = 200,000 = clk cycles per 2 ms
-    constant MAX_STR_LEN : integer := 3*INIT_BTN_STR_LEN; --Worst case scenario, all values are between 0000 and FFFF. Also, FF between each number
+    constant MAX_STR_LEN : integer := 2*INIT_BTN_STR_LEN; --Worst case scenario, all values are between 0000 and FFFF. Also, FF between each number
     
     type CHAR_ARRAY is array (integer range<>) of std_logic_vector(7 downto 0);
       
@@ -65,10 +65,10 @@ architecture Behavioral of Interface is
     type UART_STATE_TYPE is (RST_REG, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
     signal uartState : UART_STATE_TYPE := RST_REG;
     
-    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, LOAD_THOUSANDS, LOAD_TENS, LOAD_NEW_CHAR_FINAL, DONE);
+    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, ALLOW_CONV, LOAD_THOUSANDS, LOAD_TENS, LOAD_NEW_CHAR_FINAL, DONE);
     signal stringState : STRING_LOAD := IDLE;
     
-    signal done_load, reverse_control : std_logic := '0';
+    signal done_load, reverse_control, one_more_run : std_logic := '0';
     
     --this counter counts the amount of time paused in the UART reset state
     signal reset_cntr : std_logic_vector (17 downto 0) := (others=>'0');
@@ -104,6 +104,8 @@ begin
                         end if;
                     when LOAD_NEW_CHAR =>
                         request_out <= '0';
+                        stringState <= ALLOW_CONV;
+                    when ALLOW_CONV =>
                         stringState <= LOAD_THOUSANDS;
                     when LOAD_THOUSANDS =>
                         tempStr(out_string_count) <= uart_conv_data(15 downto 12) & uart_conv_data (11 downto 8);
@@ -160,7 +162,14 @@ begin
                     when WAIT_RDY =>
                         if (uartRdy = '1') then
                             if (strEnd = strIndex) then
-                                uartState <= WAIT_BTN;
+                                if sort_order = '1' then
+                                    uartState <= WAIT_BTN;
+                                elsif sort_order = '0' and one_more_run = '0' then
+                                    one_more_run <= '1';
+                                    uartState <= SEND_CHAR;
+                                else
+                                    uartState <= WAIT_BTN;
+                                end if;
                             else
                                 uartState <= SEND_CHAR;
                             end if;
@@ -214,7 +223,11 @@ begin
                             strIndex <= strIndex + 1;
                         elsif reverse_control = '1' then
                             reverse_control <= not reverse_control;
-                            strIndex <= strIndex - 2;
+                            if StrIndex - 3 < 0 then
+                                strIndex <= 1;
+                            else
+                                strIndex <= strIndex - 3;
+                            end if;
                         end if;
                     end if;
                 end if;
