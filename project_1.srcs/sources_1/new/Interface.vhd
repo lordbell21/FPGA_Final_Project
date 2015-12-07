@@ -4,23 +4,25 @@ use IEEE.std_logic_unsigned.all;
 use IEEE.NUMERIC_STD.ALL;
 
 entity Interface is
+    Generic (
+            ADDR_WIDTH : integer := 3;
+            DATA_WIDTH : integer := 16
+            );
     Port ( 
             clk, reset : in STD_LOGIC;
             start : in STD_LOGIC;
-            tx : out STD_LOGIC
+            tx : out STD_LOGIC;
+            sort_order : in STD_LOGIC
          );
 end Interface;
 
 architecture Behavioral of Interface is
 
-    component bin2bcd
+    component bin2hex
     Port(
           clk: in std_logic;
-          reset: in std_logic;
-          start: in std_logic;
-          bin: in std_logic_vector(7 downto 0);
-          ready, done_tick: out std_logic;
-          ascii_out : out std_logic_vector (23 downto 0)
+          bin: in std_logic_vector(15 downto 0);
+          hex_out : out std_logic_vector (15 downto 0)
         );
     end component;
     
@@ -28,10 +30,8 @@ architecture Behavioral of Interface is
     
     -- UUT signals
     signal done_sort, request_out : STD_LOGIC := '0';
-    constant ADDR_WIDTH : integer := 7;
-    constant DATA_WIDTH : integer := 8;
-    signal out_data : STD_LOGIC_VECTOR(7 downto 0);
-    signal uart_conv_data : STD_LOGIC_VECTOR(23 downto 0);
+    signal out_data : STD_LOGIC_VECTOR(15 downto 0);
+    signal uart_conv_data : STD_LOGIC_VECTOR(15 downto 0);
     
     signal completion : integer range 0 to 2 := 0;
     
@@ -44,7 +44,7 @@ architecture Behavioral of Interface is
     signal strIndex : natural;
     
     constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";-- 100,000,000 * 0.002 = 200,000 = clk cycles per 2 ms
-    constant MAX_STR_LEN : integer := 4*INIT_BTN_STR_LEN; --Worst case scenario, all values are between 10 and 255. Also, spaces between each number
+    constant MAX_STR_LEN : integer := 3*INIT_BTN_STR_LEN; --Worst case scenario, all values are between 0000 and FFFF. Also, FF between each number
     
     type CHAR_ARRAY is array (integer range<>) of std_logic_vector(7 downto 0);
       
@@ -65,10 +65,10 @@ architecture Behavioral of Interface is
     type UART_STATE_TYPE is (RST_REG, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
     signal uartState : UART_STATE_TYPE := RST_REG;
     
-    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, LOAD_NEW_CHAR_2, LOAD_HUNDREDS, LOAD_TENS, LOAD_ONES, LOAD_SPACE, LOAD_NEW_CHAR_3, DONE);
+    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, LOAD_THOUSANDS, LOAD_TENS, LOAD_NEW_CHAR_FINAL, DONE);
     signal stringState : STRING_LOAD := IDLE;
     
-    signal done_load : std_logic := '0';
+    signal done_load, reverse_control : std_logic := '0';
     
     --this counter counts the amount of time paused in the UART reset state
     signal reset_cntr : std_logic_vector (17 downto 0) := (others=>'0');
@@ -81,8 +81,8 @@ begin
     uart : entity work.uart_tx_ctrl
         port map(SEND => uartSend, DATA => uartData, CLK => clk, READY => uartRdy, UART_TX => uartTX);
         
-    ascii_conversion : bin2bcd
-        port map(clk => clk, reset => reset, start => start_ascii_conv, bin => out_data, ready => ready, done_tick => done_tick, ascii_out => uart_conv_data);
+    hex_conversion : bin2hex
+        port map(clk => clk, bin => out_data, hex_out => uart_conv_data);
         
     BTN_load_process : process(CLK)
     begin
@@ -104,38 +104,16 @@ begin
                         end if;
                     when LOAD_NEW_CHAR =>
                         request_out <= '0';
-                        start_ascii_conv <= '1';
-                        if done_tick = '1' then
-                            start_ascii_conv <= '0';
-                            stringState <= LOAD_NEW_CHAR_2;
-                        end if;
-                     when LOAD_NEW_CHAR_2 =>
-                        if uart_conv_data(23 downto 16) /= "00110000" then --No need for leading zeroes.
-                            stringState <= LOAD_HUNDREDS;
-                        elsif uart_conv_data(15 downto 8) /= "00110000" then
-                            stringState <= LOAD_TENS;
-                        else
-                            stringState <= LOAD_ONES;
-                        end if;
-                    when LOAD_HUNDREDS =>
-                        tempStr(out_string_count) <= uart_conv_data(23 downto 16);
+                        stringState <= LOAD_THOUSANDS;
+                    when LOAD_THOUSANDS =>
+                        tempStr(out_string_count) <= uart_conv_data(15 downto 12) & uart_conv_data (11 downto 8);
                         out_string_count <= out_string_count + 1;
-                        BTN_STR_LEN <= BTN_STR_LEN + 1;
                         stringState <= LOAD_TENS;
                     when LOAD_TENS =>
-                        tempStr(out_string_count) <= uart_conv_data(15 downto 8);
-                        out_string_count <= out_string_count + 1;
+                        tempStr(out_string_count) <= uart_conv_data(7 downto 4) & uart_conv_data(3 downto 0);
                         BTN_STR_LEN <= BTN_STR_LEN + 1;
-                        stringState <= LOAD_ONES; 
-                    when LOAD_ONES =>
-                        tempStr(out_string_count) <= uart_conv_data(7 downto 0);
-                        out_string_count <= out_string_count + 1;
-                        stringState <= LOAD_SPACE;
-                    when LOAD_SPACE =>
-                        tempStr(out_string_count) <= X"20"; 
-                        BTN_STR_LEN <= BTN_STR_LEN + 1;
-                        stringState <= LOAD_NEW_CHAR_3;
-                    when LOAD_NEW_CHAR_3 =>
+                        stringState <= LOAD_NEW_CHAR_FINAL; 
+                    when LOAD_NEW_CHAR_FINAL =>
                         request_out <= '1';
                         if out_string_count = BTN_STR_LEN-1 then
                             stringState <= DONE;
@@ -145,7 +123,6 @@ begin
                         end if;
                     when DONE =>
                         done_load <= '1';
-                        --tempStr(out_string_count) <= X"0D"; 
                         completion <= 1;   
                         stringState <= IDLE;            
                 end case;
@@ -208,20 +185,38 @@ begin
             if (rising_edge(CLK)) then
                 if uartState = LD_BTN_STR then
                     sendStr <= tempStr;
-                    strEnd <= BTN_STR_LEN;
+                    if sort_order = '1' then
+                        strEnd <= BTN_STR_LEN;
+                    elsif sort_order = '0' then
+                        strEnd <= 1; --To keep things in order.
+                    end if;
                 end if;
             end if;
         end process;
         
-        --Conrols the strIndex signal so that it contains the index
+        --Controls the strIndex signal so that it contains the index
         --of the next character that needs to be sent over uart
         char_count_process : process (CLK)
         begin
             if (rising_edge(CLK)) then
-                if (uartState = LD_BTN_STR) then                
-                    strIndex <= 0;
-                elsif uartState = RDY_LOW then --This worked when I didn't start making my edits.
-                    strIndex <= strIndex + 1;
+                if (uartState = LD_BTN_STR) then
+                    if sort_order = '1' then
+                        strIndex <= 0;
+                    elsif sort_order = '0' then                
+                        strIndex <= BTN_STR_LEN-1;
+                    end if;
+                elsif uartState = RDY_LOW then
+                    if sort_order = '1' then 
+                        strIndex <= strIndex + 1;
+                    elsif sort_order = '0' then
+                        if reverse_control = '0' then
+                            reverse_control <= not reverse_control;
+                            strIndex <= strIndex + 1;
+                        elsif reverse_control = '1' then
+                            reverse_control <= not reverse_control;
+                            strIndex <= strIndex - 2;
+                        end if;
+                    end if;
                 end if;
             end if;
         end process;
@@ -232,7 +227,11 @@ begin
             if (rising_edge(CLK)) then
                 if (uartState = SEND_CHAR) then
                     uartSend <= '1';
-                    uartData <= sendStr(strIndex);
+                    if sort_order = '1' then
+                        uartData <= sendStr(strIndex);
+                    elsif sort_order = '0' then
+                        uartData <= sendStr(strIndex - 1); -- Needs -1 to decrease properly. 
+                    end if;
                 else
                     uartSend <= '0';
                 end if;

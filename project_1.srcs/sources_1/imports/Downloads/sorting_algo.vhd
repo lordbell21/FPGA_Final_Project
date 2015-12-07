@@ -7,7 +7,7 @@ use std.textio.all;
 entity sorting_algo is
     generic (
         ADDR_WIDTH : integer := 4;
-        DATA_WIDTH : integer := 8
+        DATA_WIDTH : integer := 16
         );
     Port ( clk : in STD_LOGIC;
            start_sort : in STD_LOGIC;
@@ -40,7 +40,6 @@ architecture arch of sorting_algo is
        
     signal mem, temp : mem_type := init_mem("mem_init_vhd.mif");
     
-   
     type state_type is (idle, start, loop1, loop2, loop3, loop4, final, read_rdy, data_prep);
     signal state_reg : state_type;
     signal block_reg, block_next : integer := 0;
