@@ -13,6 +13,7 @@ Compiling package ieee.numeric_std
 Compiling package ieee.std_logic_arith
 Compiling package ieee.std_logic_unsigned
 Compiling package std.textio
+Compiling package ieee.std_logic_textio
 Compiling architecture arch of entity xil_defaultlib.sorting_algo [\sorting_algo(3,16)\]
 Compiling architecture behavioral of entity xil_defaultlib.UART_TX_CTRL [uart_tx_ctrl_default]
 Compiling architecture arch of entity xil_defaultlib.bin2hex [bin2hex_default]

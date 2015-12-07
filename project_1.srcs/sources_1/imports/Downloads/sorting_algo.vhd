@@ -1,8 +1,9 @@
 
+use std.textio.all;
 library IEEE;
+use ieee.std_logic_textio.all;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
-use std.textio.all;
  
 entity sorting_algo is
     generic (
@@ -27,13 +28,15 @@ architecture arch of sorting_algo is
     impure function init_mem(mif_file_name : in string) return mem_type is
         file mif_file : text open read_mode is mif_file_name;
         variable mif_line : line;
-        variable temp_bv : bit_vector(DATA_WIDTH-1 downto 0);
+        --variable temp_bv : bit_vector(DATA_WIDTH-1 downto 0); -- For Bit Input
+        variable temp_bv : std_logic_vector(DATA_WIDTH-1 downto 0); -- For Hex Input
         variable temp_mem : mem_type;
         begin
             for i in mem_type'range loop
                 readline(mif_file, mif_line);
-                read(mif_line, temp_bv);
-                temp_mem(i) := unsigned(to_stdlogicvector(temp_bv));
+                hread(mif_line, temp_bv);
+                temp_mem(i) := unsigned(temp_bv); -- For Hex input
+                --temp_mem(i) := unsigned(to_stdlogicvector(temp_bv)); -- For Bit input
             end loop;
             return temp_mem;
         end function;

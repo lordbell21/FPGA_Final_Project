@@ -2,11 +2,15 @@
 # Webtalk v2015.2 (64-bit)
 # SW Build 1266856 on Fri Jun 26 16:35:25 MDT 2015
 # IP Build 1264090 on Wed Jun 24 14:22:01 MDT 2015
-# Start of session at: Mon Dec 07 02:37:09 2015
-# Process ID: 10036
+# Start of session at: Mon Dec 07 14:48:39 2015
+# Process ID: 4108
 # Log file: G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav/webtalk.log
 # Journal file: G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav\webtalk.jou
 #-----------------------------------------------------------
 source G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav/xsim.dir/sort_test_behav/webtalk/xsim_webtalk.tcl -notrace
-INFO: [Common 17-186] 'G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav/xsim.dir/sort_test_behav/webtalk/usage_statistics_ext_xsim.xml' has been successfully sent to Xilinx on Mon Dec 07 02:37:13 2015. For additional details about this file, please refer to the WebTalk help file at G:/Xilinx/Vivado/2015.2/doc/webtalk_introduction.html.
-INFO: [Common 17-206] Exiting Webtalk at Mon Dec 07 02:37:13 2015...
+webtalk_transmit: Time (s): cpu = 00:00:00 ; elapsed = 00:00:06 . Memory (MB): peak = 61.277 ; gain = 0.004
+
+    while executing
+"webtalk_transmit -clientid 147244934 -regid "211084392_0_0_946" -xml G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/be..."
+    (file "G:/Users/Steven/FPGADesignProjects/final_project/project_1/project_1.sim/sim_1/behav/xsim.dir/sort_test_behav/webtalk/xsim_webtalk.tcl" line 41)
+INFO: [Common 17-206] Exiting Webtalk at Mon Dec 07 14:48:44 2015...
