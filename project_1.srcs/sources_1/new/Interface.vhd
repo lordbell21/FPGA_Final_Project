@@ -5,8 +5,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Interface is
     Generic (
-            ADDR_WIDTH : integer := 3;
-            DATA_WIDTH : integer := 16
+            ADDR_WIDTH : integer := 4;
+            DATA_WIDTH : integer := 24
             );
     Port ( 
             clk, reset : in STD_LOGIC;
@@ -36,8 +36,8 @@ architecture Behavioral of Interface is
     signal completion : integer range 0 to 2 := 0;
     
     --BTN_STR_LEN is the length of the array of numbers. 
-    signal EVEN_BTN_STR_LEN : natural := 2**(DATA_WIDTH/4);
-    signal ODD_BTN_STR_LEN : natural := ((DATA_WIDTH/4)-1) + 2**((DATA_WIDTH/4)-1) ;
+    signal EVEN_BTN_STR_LEN : natural := (DATA_WIDTH / 8) * 2**ADDR_WIDTH;
+    signal ODD_BTN_STR_LEN : natural := ((DATA_WIDTH/8)) * 2**ADDR_WIDTH + 8 ;
     signal data_width_signal : natural := DATA_WIDTH;
     signal BTN_STR_LEN : natural := 2;
     constant INIT_BTN_STR_LEN : natural := 2**ADDR_WIDTH; 
@@ -88,7 +88,8 @@ begin
 
     sorting_algorithm : entity work.sorting_algo(arch)
         generic map(ADDR_WIDTH => ADDR_WIDTH, DATA_WIDTH => DATA_WIDTH)
-        port map(clk => clk, start_sort => start, done_sort => done_sort, request_out => request_out, out_data => out_data, reset => reset);
+        port map(clk => clk, start_sort => start, done_sort => done_sort, request_out => request_out, out_data => out_data, reset => reset, 
+        sw => sort_order);
    
     uart : entity work.uart_tx_ctrl
         port map(SEND => uartSend, DATA => uartData, CLK => clk, READY => uartRdy, UART_TX => uartTX);
@@ -179,48 +180,41 @@ begin
         end process;
         
         --Next Uart state logic (states described above)
-        next_uartState_process : process (CLK)
-        begin
-            if (rising_edge(CLK)) then
-                if (reset = '1') then
-                    uartState <= RST_REG;
-                else    
-                    case uartState is 
-                    when RST_REG =>
-                        if (reset_cntr = RESET_CNTR_MAX) then
-                          uartState <= WAIT_BTN;
-                        end if;
-                    when SEND_CHAR =>
-                        uartState <= RDY_LOW;
-                    when RDY_LOW =>
-                        uartState <= WAIT_RDY;
-                    when WAIT_RDY =>
-                        if (uartRdy = '1') then
-                            if (strEnd = strIndex) then
-                                if sort_order = '1' then
-                                    uartState <= WAIT_BTN;
-                                elsif sort_order = '0' and one_more_run = '0' then
-                                    one_more_run <= '1';
-                                    uartState <= SEND_CHAR;
-                                else
-                                    uartState <= WAIT_BTN;
-                                end if;
-                            else
-                                uartState <= SEND_CHAR;
-                            end if;
-                        end if;
-                    when WAIT_BTN =>
-                        if (done_load = '1') then
-                            uartState <= LD_BTN_STR;
-                        end if;
-                    when LD_BTN_STR =>
-                        uartState <= SEND_CHAR;
-                    when others=> --should never be reached
+            next_uartState_process : process (CLK)
+            begin
+                if (rising_edge(CLK)) then
+                    if (reset = '1') then
                         uartState <= RST_REG;
-                    end case;
-                end if ;
-            end if;
-        end process;
+                    else    
+                        case uartState is 
+                        when RST_REG =>
+                            if (reset_cntr = RESET_CNTR_MAX) then
+                              uartState <= WAIT_BTN;
+                            end if;
+                        when SEND_CHAR =>
+                            uartState <= RDY_LOW;
+                        when RDY_LOW =>
+                            uartState <= WAIT_RDY;
+                        when WAIT_RDY =>
+                            if (uartRdy = '1') then
+                                if (strEnd = strIndex) then
+                                    uartState <= WAIT_BTN;
+                                else
+                                    uartState <= SEND_CHAR;
+                                end if;
+                            end if;
+                        when WAIT_BTN =>
+                            if (done_load = '1') then
+                                uartState <= LD_BTN_STR;
+                            end if;
+                        when LD_BTN_STR =>
+                            uartState <= SEND_CHAR;
+                        when others=> --should never be reached
+                            uartState <= RST_REG;
+                        end case;
+                    end if ;
+                end if;
+            end process;
         
         --Loads the sendStr and strEnd signals when a LD state is
         --is reached.
@@ -229,11 +223,7 @@ begin
             if (rising_edge(CLK)) then
                 if uartState = LD_BTN_STR then
                     sendStr <= tempStr;
-                    if sort_order = '1' then
-                        strEnd <= BTN_STR_LEN;
-                    elsif sort_order = '0' then
-                        strEnd <= 1; --To keep things in order.
-                    end if;
+                    strEnd <= BTN_STR_LEN;
                 end if;
             end if;
         end process;
@@ -244,27 +234,9 @@ begin
         begin
             if (rising_edge(CLK)) then
                 if (uartState = LD_BTN_STR) then
-                    if sort_order = '1' then
-                        strIndex <= 0;
-                    elsif sort_order = '0' then                
-                        strIndex <= BTN_STR_LEN-1;
-                    end if;
+                    strIndex <= 0;
                 elsif uartState = RDY_LOW then
-                    if sort_order = '1' then 
-                        strIndex <= strIndex + 1;
-                    elsif sort_order = '0' then
-                        if reverse_control = '0' then
-                            reverse_control <= not reverse_control;
-                            strIndex <= strIndex + 1;
-                        elsif reverse_control = '1' then
-                            reverse_control <= not reverse_control;
-                            if StrIndex - 3 < 0 then
-                                strIndex <= 1;
-                            else
-                                strIndex <= strIndex - 3;
-                            end if;
-                        end if;
-                    end if;
+                    strIndex <= strIndex + 1;
                 end if;
             end if;
         end process;
@@ -275,11 +247,7 @@ begin
             if (rising_edge(CLK)) then
                 if (uartState = SEND_CHAR) then
                     uartSend <= '1';
-                    if sort_order = '1' then
-                        uartData <= sendStr(strIndex);
-                    elsif sort_order = '0' then
-                        uartData <= sendStr(strIndex - 1); -- Needs -1 to decrease properly. 
-                    end if;
+                    uartData <= sendStr(strIndex);
                 else
                     uartSend <= '0';
                 end if;

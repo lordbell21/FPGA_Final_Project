@@ -1,4 +1,3 @@
-
 use std.textio.all;
 library IEEE;
 use ieee.std_logic_textio.all;
@@ -8,14 +7,15 @@ use ieee.numeric_std.all;
 entity sorting_algo is
     generic (
         ADDR_WIDTH : integer := 4;
-        DATA_WIDTH : integer := 16
+        DATA_WIDTH : integer := 20
         );
     Port ( clk : in STD_LOGIC;
            start_sort : in STD_LOGIC;
            done_sort : out STD_LOGIC;
            request_out : in STD_LOGIC;
            out_data : out STD_LOGIC_VECTOR (DATA_WIDTH-1 downto 0);
-           reset : in STD_LOGIC)
+           reset : in STD_LOGIC;
+           sw : in STD_LOGIC)
            ;
 end sorting_algo;
  
@@ -113,19 +113,35 @@ begin
                          if(k_reg >= hi_reg) then
                              state_reg <= loop4;
                          else
-                             if(i_reg = mid_reg) then
-                                 temp(k_reg) <= mem(j_reg);
-                                 j_reg <= j_reg + 1;
-                             elsif(j_reg = hi_reg) then
-                                 temp(k_reg) <= mem(i_reg);
-                                 i_reg <= i_reg + 1;
-                             elsif(mem(j_reg) < mem(i_reg)) then
-                                 temp(k_reg) <= mem(j_reg);
-                                 j_reg <= j_reg + 1;
-                             else
-                                 temp(k_reg) <= mem(i_reg);
-                                 i_reg <= i_reg +1;
-                             end if;
+                            if(sw = '0') then
+                                 if(i_reg = mid_reg) then
+                                     temp(k_reg) <= mem(j_reg);
+                                     j_reg <= j_reg + 1;
+                                 elsif(j_reg = hi_reg) then
+                                     temp(k_reg) <= mem(i_reg);
+                                     i_reg <= i_reg + 1;
+                                 elsif(mem(j_reg) < mem(i_reg)) then
+                                     temp(k_reg) <= mem(j_reg);
+                                     j_reg <= j_reg + 1;
+                                 else
+                                     temp(k_reg) <= mem(i_reg);
+                                     i_reg <= i_reg +1;
+                                 end if;
+                            else
+                                if(i_reg = mid_reg) then
+                                    temp(k_reg) <= mem(j_reg);
+                                    j_reg <= j_reg + 1;
+                                elsif(j_reg = hi_reg) then
+                                    temp(k_reg) <= mem(i_reg);
+                                    i_reg <= i_reg + 1;
+                                elsif(mem(j_reg) > mem(i_reg)) then
+                                    temp(k_reg) <= mem(j_reg);
+                                    j_reg <= j_reg + 1;
+                                else
+                                    temp(k_reg) <= mem(i_reg);
+                                    i_reg <= i_reg +1;
+                                end if;
+                            end if;
                              k_reg <= k_reg + 1;
                              
                          end if;

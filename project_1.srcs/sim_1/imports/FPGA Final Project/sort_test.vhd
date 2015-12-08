@@ -58,7 +58,7 @@ begin
         start <= '1';
         wait for 2 ms;
         start <= '0';
-        wait for 8 ms;
+        wait for 30 ms;
         reset <= '1';
         wait for 20 ns;
         reset <= '0';
