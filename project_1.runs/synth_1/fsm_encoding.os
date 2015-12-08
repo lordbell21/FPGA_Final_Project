@@ -7,7 +7,7 @@
  add_fsm_encoding \
        {Interface.stringState} \
        { }  \
-       {{000 000} {001 001} {010 010} {011 011} {100 100} {101 101} {110 110} }
+       {{000 000} {001 001} {010 011} {011 010} {100 100} {101 101} }
 
  add_fsm_encoding \
        {Interface.uartState} \

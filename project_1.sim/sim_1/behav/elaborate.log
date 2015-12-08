@@ -16,7 +16,6 @@ Compiling package std.textio
 Compiling package ieee.std_logic_textio
 Compiling architecture arch of entity xil_defaultlib.sorting_algo [\sorting_algo(3,16)\]
 Compiling architecture behavioral of entity xil_defaultlib.UART_TX_CTRL [uart_tx_ctrl_default]
-Compiling architecture arch of entity xil_defaultlib.bin2hex [bin2hex_default]
 Compiling architecture behavioral of entity xil_defaultlib.Interface [interface_default]
 Compiling architecture behavioral of entity xil_defaultlib.sort_test
 Waiting for 2 sub-compilation(s) to finish...

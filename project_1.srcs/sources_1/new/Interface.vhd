@@ -21,8 +21,8 @@ architecture Behavioral of Interface is
     component bin2hex
     Port(
           clk: in std_logic;
-          bin: in std_logic_vector(15 downto 0);
-          hex_out : out std_logic_vector (15 downto 0)
+          bin: in std_logic_vector(3 downto 0);
+          hex_out : out std_logic_vector (3 downto 0)
         );
     end component;
     
@@ -30,21 +30,32 @@ architecture Behavioral of Interface is
     
     -- UUT signals
     signal done_sort, request_out : STD_LOGIC := '0';
-    signal out_data : STD_LOGIC_VECTOR(15 downto 0);
-    signal uart_conv_data : STD_LOGIC_VECTOR(15 downto 0);
+    signal out_data : STD_LOGIC_VECTOR(DATA_WIDTH-1 downto 0);
+    signal uart_conv_data, out_data_hex : STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
     
     signal completion : integer range 0 to 2 := 0;
     
     --BTN_STR_LEN is the length of the array of numbers. 
-    signal BTN_STR_LEN : natural := 2**ADDR_WIDTH;
+    signal EVEN_BTN_STR_LEN : natural := 2**(DATA_WIDTH/4);
+    signal ODD_BTN_STR_LEN : natural := ((DATA_WIDTH/4)-1) + 2**((DATA_WIDTH/4)-1) ;
+    signal data_width_signal : natural := DATA_WIDTH;
+    signal BTN_STR_LEN : natural := 2;
     constant INIT_BTN_STR_LEN : natural := 2**ADDR_WIDTH; 
     --constant WELCOME_STR_LEN : natural := 27;
     
     signal strEnd : natural := INIT_BTN_STR_LEN;
     signal strIndex : natural;
     
+    signal byte_determine, change_determine : std_logic := '1'; -- 0 = right byte, 1 = left byte; start at 1.
+    signal string_begun, skip_next : std_logic := '0'; -- used for controlling out_string_count's increment
+    signal bytes_remaining : integer := DATA_WIDTH; -- bytes remaining to be written from data entry
+    signal write_opposite : std_logic := '0'; --This is used when an odd number of Hex values are used.
+    signal next_write : integer := 0; --This determines if out_string_count is pushed. Used for odd DATA_WIDTHs
+    signal byte_written : integer := 8;
+    signal first_run : std_logic := '0';
+    
     constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";-- 100,000,000 * 0.002 = 200,000 = clk cycles per 2 ms
-    constant MAX_STR_LEN : integer := 2*INIT_BTN_STR_LEN; --Worst case scenario, all values are between 0000 and FFFF. Also, FF between each number
+    constant MAX_STR_LEN : integer := (DATA_WIDTH / 4) * INIT_BTN_STR_LEN; 
     
     type CHAR_ARRAY is array (integer range<>) of std_logic_vector(7 downto 0);
       
@@ -65,7 +76,8 @@ architecture Behavioral of Interface is
     type UART_STATE_TYPE is (RST_REG, SEND_CHAR, RDY_LOW, WAIT_RDY, WAIT_BTN, LD_BTN_STR);
     signal uartState : UART_STATE_TYPE := RST_REG;
     
-    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, ALLOW_CONV, LOAD_THOUSANDS, LOAD_TENS, LOAD_NEW_CHAR_FINAL, DONE);
+    
+    type STRING_LOAD is (IDLE, LOAD_NEW_CHAR, CHECK_BYTE_STATUS, LOAD_HEX, LOAD_FINAL, DONE);
     signal stringState : STRING_LOAD := IDLE;
     
     signal done_load, reverse_control, one_more_run : std_logic := '0';
@@ -81,8 +93,8 @@ begin
     uart : entity work.uart_tx_ctrl
         port map(SEND => uartSend, DATA => uartData, CLK => clk, READY => uartRdy, UART_TX => uartTX);
         
-    hex_conversion : bin2hex
-        port map(clk => clk, bin => out_data, hex_out => uart_conv_data);
+    --hex_conversion : bin2hex
+    --    port map(clk => clk, bin => out_data_hex, hex_out => uart_conv_data);
         
     BTN_load_process : process(CLK)
     begin
@@ -92,7 +104,15 @@ begin
                 done_load <= '0';
                 completion <= 0;
                 out_string_count <= 0;
-                BTN_STR_LEN <= INIT_BTN_STR_LEN;
+                request_out <= '0';
+                byte_written <= 8;
+                byte_determine <= '1';
+                
+                if (data_width_signal/4) mod 2 = 1 then
+                    BTN_STR_LEN <= ODD_BTN_STR_LEN;
+                else 
+                    BTN_STR_LEN <= EVEN_BTN_STR_LEN;
+                end if;
             else
                 case stringState is
                     when IDLE =>
@@ -104,23 +124,38 @@ begin
                         end if;
                     when LOAD_NEW_CHAR =>
                         request_out <= '0';
-                        stringState <= ALLOW_CONV;
-                    when ALLOW_CONV =>
-                        stringState <= LOAD_THOUSANDS;
-                    when LOAD_THOUSANDS =>
-                        tempStr(out_string_count) <= uart_conv_data(15 downto 12) & uart_conv_data (11 downto 8);
-                        out_string_count <= out_string_count + 1;
-                        stringState <= LOAD_TENS;
-                    when LOAD_TENS =>
-                        tempStr(out_string_count) <= uart_conv_data(7 downto 4) & uart_conv_data(3 downto 0);
-                        BTN_STR_LEN <= BTN_STR_LEN + 1;
-                        stringState <= LOAD_NEW_CHAR_FINAL; 
-                    when LOAD_NEW_CHAR_FINAL =>
+                        stringState <= LOAD_HEX; 
+                    when LOAD_HEX =>
+                       first_run <= '1'; 
+                       bytes_remaining <= bytes_remaining-4;
+                       if bytes_remaining > 0 then          
+                            if byte_determine = '1' then
+                                tempStr(out_string_count)(7 downto 4) <= out_data(bytes_remaining-1 downto bytes_remaining-4);
+                                byte_written <= byte_written - 4;
+                                byte_determine <= '0';
+                            else
+                                tempStr(out_string_count)(3 downto 0) <= out_data(bytes_remaining-1 downto bytes_remaining-4);
+                                byte_written <= byte_written - 4;
+                                byte_determine <= '1';
+                            end if;
+                      end if;
+                      stringState <= CHECK_BYTE_STATUS;
+                    when CHECK_BYTE_STATUS =>
+                        if byte_written <= 0 then
+                            out_string_count <= out_string_count + 1;
+                            byte_written <= 8;
+                        end if;
+                        if bytes_remaining >= 4 then
+                            stringState <= LOAD_NEW_CHAR;
+                        else
+                            stringState <= LOAD_FINAL; 
+                        end if;
+                    when LOAD_FINAL =>
                         request_out <= '1';
-                        if out_string_count = BTN_STR_LEN-1 then
+                        bytes_remaining <= DATA_WIDTH;
+                        if out_string_count = BTN_STR_LEN then
                             stringState <= DONE;
                         else
-                            out_string_count <= out_string_count + 1;
                             stringState <= LOAD_NEW_CHAR;
                         end if;
                     when DONE =>
